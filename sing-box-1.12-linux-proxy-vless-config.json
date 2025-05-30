@@ -1,0 +1,93 @@
+{
+  "log": {
+    "level": "warn",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "tls",
+        "tag": "dns-google",
+        "server": "8.8.8.8"
+      },
+      {
+        "type": "tls",
+        "tag": "dns-cloudflare",
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "local",
+        "tag": "dns-local"
+      }
+    ],
+    "strategy": "ipv4_only"
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "listen": "0.0.0.0",
+      "listen_port": 8080
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "out-direct"
+    },
+    {
+      "type": "vless",
+      "tag": "out-vless",
+      "server": "__REPLACE_WITH_YOUR_SERVER__",
+      "server_port": 443,
+      "uuid": "__REPLACE_WITH_YOUR_UUID__",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "rt.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "__REPLACE_WITH_YOUR_PUBLIC_KEY__",
+          "short_id": "__REPLACE_WITH_YOUR_SHORT_ID__"
+        }
+      }
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "out-direct"
+      },
+      {
+        "rule_set": "rs-antizapret",
+        "outbound": "out-vless"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "rs-antizapret",
+        "url": "https://github.com/savely-krasovsky/antizapret-sing-box/releases/latest/download/antizapret.srs",
+        "download_detour": "out-vless"
+      }
+    ],
+    "auto_detect_interface": true,
+    "default_domain_resolver": "dns-local"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "rules": [
+    {
+      "domain_suffix": [
+        "api.github.com",
+        "api.individual.githubcopilot.com",
+        "avatars.githubusercontent.com",
+        "collector.github.com",
+        "github.com",
+        "github.githubassets.com"
+      ]
+    }
+  ]
+}

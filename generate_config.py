@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
 
 import json
 import urllib.parse
 import argparse
 import sys
 import os
-from typing import Dict, Any
+import re
+from typing import Dict, Any, Optional
 
 def parse_vless_url(vless_url: str) -> Dict[str, Any]:
     if not vless_url.startswith('vless://'):
@@ -21,9 +23,13 @@ def parse_vless_url(vless_url: str) -> Dict[str, Any]:
     port = int(server_and_port[1]) if len(server_and_port) > 1 else 443
     params = urllib.parse.parse_qs(params_part)
 
+    processed_params = {}
     for key, value in params.items():
         if isinstance(value, list) and len(value) == 1:
-            params[key] = value[0]
+            processed_params[key] = value[0]
+        else:
+            processed_params[key] = value
+    params = processed_params
 
     return {
         'name': name,
@@ -44,6 +50,20 @@ def parse_vless_url(vless_url: str) -> Dict[str, Any]:
         'alpn': params.get('alpn', ''),
         'all_params': params
     }
+
+def sanitize_filename(name: str) -> str:
+    """Convert server name to valid filename"""
+    # Remove or replace invalid characters for filename
+    sanitized = re.sub(r'[<>:"/\\|?*]', '_', name)
+    # Remove leading/trailing whitespace and dots
+    sanitized = sanitized.strip(' .')
+    # Limit length
+    if len(sanitized) > 100:
+        sanitized = sanitized[:100]
+    # Ensure it's not empty
+    if not sanitized:
+        sanitized = "vless_config"
+    return sanitized + ".json"
 
 def load_template(template_path: str) -> Dict[str, Any]:
     try:
@@ -120,7 +140,7 @@ def update_vless_outbound(config: Dict[str, Any], vless_params: Dict[str, Any]) 
             grpc_config = transport_config.setdefault('grpc', {})
             grpc_config['service_name'] = vless_params['path']
 
-def generate_config(template_path: str, vless_url: str, output_path: str = None) -> str:
+def generate_config(template_path: str, vless_url: str, output_path: Optional[str] = None) -> str:
     try:
         vless_params = parse_vless_url(vless_url)
         print(f"Successfully parsed VLESS URL for server: {vless_params['name']}")
@@ -160,35 +180,41 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    template_group = parser.add_mutually_exclusive_group(required=True)
-
     parser.add_argument(
         '-u', '--url',
         required=True,
         help='VLESS URL for connection'
     )
 
-    template_group.add_argument(
+    parser.add_argument(
         '-t', '--template',
+        required=True,
         help='Path to JSON template file'
     )
 
     parser.add_argument(
         '-o', '--output',
-        help='Path for saving configuration (default: console output)'
+        help='Path for saving configuration (default: auto-generate from server name)'
     )
 
     args = parser.parse_args()
 
-    if args.template:
-        template_path = args.template
+    template_path = args.template
+    if not template_path:
+        print("Template file must be specified with -t/--template", file=sys.stderr)
+        sys.exit(1)
 
     if not os.path.exists(template_path):
         print(f"Template file not found: {template_path}", file=sys.stderr)
         sys.exit(1)
 
     try:
-        generate_config(template_path, args.url, args.output)
+        output_path = args.output
+        if not output_path:
+            vless_params = parse_vless_url(args.url)
+            output_path = sanitize_filename(vless_params['name'])
+
+        generate_config(template_path, args.url, output_path)
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

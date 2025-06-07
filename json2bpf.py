@@ -108,8 +108,7 @@ def main():
 
     parser.add_argument(
         "--name",
-        required=True,
-        help="Profile name"
+        help="Profile name (defaults to config filename if not specified)"
     )
 
     parser.add_argument(
@@ -186,19 +185,30 @@ def main():
         sys.exit(1)
 
     config_content = args.config
+    config_file_path = None
     try:
         if config_content.startswith(("./", "/", "~/")) or config_content.endswith(".json"):
+            config_file_path = config_content
             with open(config_content, "r", encoding="utf-8") as f:
                 config_content = f.read()
     except (FileNotFoundError, PermissionError):
         pass
 
+    profile_name = args.name
+    if not profile_name and config_file_path:
+        import os
+        profile_name = os.path.splitext(os.path.basename(config_file_path))[0]
+
+    if not profile_name:
+        print("Error: --name is required when config is not a file", file=sys.stderr)
+        sys.exit(1)
+
     if args.type == "local":
-        profile = create_local_profile(args.name, config_content)
+        profile = create_local_profile(profile_name, config_content)
     elif args.type == "remote":
         import time
         profile = create_remote_profile(
-            name=args.name,
+            name=profile_name,
             config=config_content,
             remote_path=remote_path,
             auto_update=auto_update,
@@ -207,7 +217,7 @@ def main():
         )
     elif args.type == "icloud":
         profile = create_icloud_profile(
-            name=args.name,
+            name=profile_name,
             config=config_content,
             remote_path=remote_path
         )
@@ -215,9 +225,18 @@ def main():
     encoded_data = encode_profile_content(profile)
 
     if args.output:
-        with open(args.output, "wb") as f:
+        output_path = args.output
+    elif config_file_path:
+        import os
+        base_name = os.path.splitext(config_file_path)[0]
+        output_path = base_name + ".bpf"
+    else:
+        output_path = None
+
+    if output_path:
+        with open(output_path, "wb") as f:
             f.write(encoded_data)
-        print(f"Encoded profile saved to: {args.output}")
+        print(f"Encoded profile saved to: {output_path}")
         print(f"Size: {len(encoded_data)} bytes")
     else:
         print(encoded_data.hex())

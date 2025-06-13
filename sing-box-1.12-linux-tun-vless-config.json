@@ -74,9 +74,19 @@
       {
         "rule_set": "rs-antizapret",
         "outbound": "out-vless"
+      },
+      {
+        "rule_set": "rs-youtube",
+        "outbound": "out-vless"
       }
     ],
     "rule_set": [
+      {
+        "type": "remote",
+        "tag": "rs-youtube",
+        "url": "https://raw.githubusercontent.com/yamixst/sing-box-config/refs/heads/main/rule_set/youtube.srs",
+        "download_detour": "out-vless"
+      },
       {
         "type": "remote",
         "tag": "rs-antizapret",

@@ -8,6 +8,7 @@
         ".appspot.com",
         ".clients6.google.com",
         ".gemini.google.com",
+        ".geminicli.com",
         ".googleapis.com",
         ".notebooklm.google",
         ".notebooklm.google.com",
@@ -15,6 +16,7 @@
         "ai.google.dev",
         "aistudio.google.com",
         "gemini.google.com",
+        "geminicli.com",
         "notebooklm.google",
         "notebooklm.google.com"
       ]

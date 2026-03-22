@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd rule_set
+
 for f in *.json
 do
 	echo "Compile $f"

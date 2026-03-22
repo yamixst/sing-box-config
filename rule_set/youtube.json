@@ -2,6 +2,9 @@
   "version": 3,
   "rules": [
     {
+      "domain": "youtube.com"
+    },
+    {
       "domain_suffix": [
         ".1e100.net",
         ".googleusercontent.com",

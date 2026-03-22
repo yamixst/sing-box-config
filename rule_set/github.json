@@ -2,15 +2,19 @@
   "version": 3,
   "rules": [
     {
-      "domain_suffix": [
-        ".github.com",
-        ".githubassets.com",
-        ".githubcopilot.com",
-        ".githubusercontent.com",
+      "domain": [
         "github.com",
         "githubassets.com",
         "githubcopilot.com",
         "githubusercontent.com"
+      ]
+    },
+    {
+      "domain_suffix": [
+        ".github.com",
+        ".githubassets.com",
+        ".githubcopilot.com",
+        ".githubusercontent.com"
       ]
     }
   ]

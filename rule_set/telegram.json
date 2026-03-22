@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "rules": [
+    {
+      "domain": "telegram.org"
+    },
+    {
+      "domain_suffix": ".telegram.org"
+    },
+    {
+      "process_name": "Telegram"
+    }
+  ]
+}

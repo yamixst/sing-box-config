@@ -6,9 +6,6 @@
     },
     {
       "domain_suffix": ".telegram.org"
-    },
-    {
-      "process_name": "Telegram"
     }
   ]
 }

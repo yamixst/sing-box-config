@@ -87,13 +87,13 @@
       {
         "type": "remote",
         "tag": "rs-android-packages",
-        "url": "https://raw.githubusercontent.com/yamixst/sing-box-config/refs/heads/main/rule_set/android-packages.srs",
+        "url": "https://raw.githubusercontent.com/yamixst/sing-box-config/refs/heads/main/rule_set/srs/android-packages.srs",
         "download_detour": "out-vless"
       },
       {
         "type": "remote",
         "tag": "rs-antizapret",
-        "url": "https://github.com/savely-krasovsky/antizapret-sing-box/releases/latest/download/antizapret.srs",
+        "url": "https://github.com/savely-krasovsky/antizapret-sing-box/releases/latest/download/srs/antizapret.srs",
         "download_detour": "out-vless"
       }
     ],

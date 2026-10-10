@@ -2,13 +2,7 @@
   "version": 3,
   "rules": [
     {
-      "domain_suffix": [
-        "google-analytics.com",
-        "google.com",
-        "googleapis.com",
-        "googleusercontent.com",
-        "gstatic.com"
-      ]
+      "domain_suffix": "gstatic.com"
     },
     {
       "domain_keyword": [

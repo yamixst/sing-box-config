@@ -2,7 +2,7 @@
   "version": 3,
   "rules": [
     {
-      "domain": [
+      "domain_suffix": [
         "comments.app",
         "contest.com",
         "fragment.com",
@@ -20,27 +20,6 @@
         "tg.dev",
         "ton.org",
         "tx.me"
-      ]
-    },
-    {
-      "domain_suffix": [
-        ".comments.app",
-        ".contest.com",
-        ".fragment.com",
-        ".graph.org",
-        ".quiz.directory",
-        ".t.me",
-        ".tdesktop.com",
-        ".telega.one",
-        ".telegra.ph",
-        ".telegram.dog",
-        ".telegram.me",
-        ".telegram.org",
-        ".telegram.space",
-        ".telesco.pe",
-        ".tg.dev",
-        ".ton.org",
-        ".tx.me"
       ]
     }
   ]
